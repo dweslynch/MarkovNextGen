@@ -30,7 +30,7 @@ module public MarkovUtilities =
             if _chain.ContainsKey word then
                 _chain.[word].AddAfter(link)
             else
-                let _lnk = { After = new List<string> (link) }
+                let _lnk = new Link (link)
                 _chain.Add(word, _lnk)
         _chain
     
@@ -53,10 +53,10 @@ module public MarkovUtilities =
     let Merge (from : Dictionary<string, Link>) (target : Dictionary<string, Link>) =
         let _target = new Dictionary<string, Link> (target)
         for kvp in from do
-            if _target.ContainsKey kvp.Key then
+            if _target.ContainsKey kvp.Key then // Entry exists, merge
                 _target.[kvp.Key].AddAfter(kvp.Value.After)
             else
-                let link = { After = new List<string> (kvp.Value.After) } // Create new Link with a copy of the lsit
+                let link = new Link(kvp.Value.After)    // Create new entry
                 _target.Add(kvp.Key, link)
         _target
     
@@ -74,7 +74,7 @@ module public MarkovUtilities =
         // Starts at 1 since genChain already contains _word
         for i = 1 to length - 1 do
             if chain.ContainsKey _word then
-                if chain.[_word].After.Count > 0 then
+                if chain.[_word].After.Length > 0 then
                     _word <- chain.[_word].RandomAfter
                     genChain <- sprintf "%s %s" genChain _word
             else 
@@ -88,7 +88,7 @@ module public MarkovUtilities =
 
         let mutable i = 0 // Break at 50 so we don't get an infinite loop
         while i < 50 && chain.ContainsKey _word do
-            if chain.[_word].After.Count > 0 then
+            if chain.[_word].After.Length > 0 then
                 _word <- chain.[_word].RandomAfter
                 genChain <- sprintf "%s %s" genChain _word
         genChain

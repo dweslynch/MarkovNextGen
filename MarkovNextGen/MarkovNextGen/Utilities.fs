@@ -8,7 +8,7 @@ open System.Text.RegularExpressions
 open Newtonsoft.Json
 
 module public MarkovUtilities =
-
+    
     let private randy = new Random()
     
     let ReadChain filename =
@@ -23,32 +23,6 @@ module public MarkovUtilities =
     let WriteChain filename (chain : Dictionary<string, Link>) =
         let jsonchain = JsonConvert.SerializeObject(chain, Formatting.Indented)
         File.WriteAllText (filename, jsonchain)
-    
-    let LinkToChain (chain : Dictionary<string, Link>) word (link : IEnumerable<string>) =
-        let _chain = new Dictionary<string, Link> (chain)
-        if String.IsNullOrWhiteSpace word then
-            if _chain.ContainsKey word then
-                _chain.[word].AddAfter(link)
-            else
-                let _lnk = new Link (link)
-                _chain.Add(word, _lnk)
-        _chain
-    
-    let Train (s : string) =
-        // Consistent casing and treat linebreaks as spaces
-        let lower = s.ToLower().Replace(Environment.NewLine, " ").Trim(' ')
-        // Remove characters other than letters and spaces
-        let cleancopy = Regex.Replace(lower, "[^a-z ]+", "", RegexOptions.Compiled)
-        let words = cleancopy.Split(' ')
-        let mutable chain = new Dictionary<string, Link> ()
-        if words.Length >= 2 then // Don't record single words
-            for i = 0 to words.Length - 2 do
-                let key = words.[i]
-                let value = words.[i + 1]
-                let after = new List<string> ()
-                after.Add value
-                chain <- LinkToChain chain key after
-        chain
     
     let Merge (from : Dictionary<string, Link>) (target : Dictionary<string, Link>) =
         let _target = new Dictionary<string, Link> (target)
@@ -65,6 +39,7 @@ module public MarkovUtilities =
             printfn "%s" kvp.Key
             for x in kvp.Value.After do
                 printfn "\t%s" x
+            printfn ""
     
     let Generate (chain : Dictionary<string, Link>) length word =
         let keys = chain.Keys.ToList();

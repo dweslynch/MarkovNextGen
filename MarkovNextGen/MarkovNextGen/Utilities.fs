@@ -8,9 +8,13 @@ open System.Text.RegularExpressions
 open Newtonsoft.Json
 
 module public MarkovUtilities =
+
+    let randy = new Random()
     
-    let private randy = new Random()
-    
+    /// <summary>
+    /// Static method for reading a chain from a file
+    /// </summary>
+    /// <param name="filename">The name of the file containing the chain</param>
     let ReadChain filename =
         if File.Exists filename then
             let jsonchain = File.ReadAllText filename
@@ -20,10 +24,20 @@ module public MarkovUtilities =
             printfn "Resol: Returning blank Dictionary<string, Link>"
             new Dictionary<string, Link> ()
     
+    /// <summary>
+    /// Static method for writing a chain to a file
+    /// </summary>
+    /// <param name="filename">The chain to serialize</param>
+    /// <param name="chain">The file name</param>
     let WriteChain filename (chain : Dictionary<string, Link>) =
         let jsonchain = JsonConvert.SerializeObject(chain, Formatting.Indented)
         File.WriteAllText (filename, jsonchain)
     
+    /// <summary>
+    /// Static method for merging two chains into a new one
+    /// </summary>
+    /// <param name="from">The first chain</param>
+    /// <param name="target">The second chain</param>
     let Merge (from : Dictionary<string, Link>) (target : Dictionary<string, Link>) =
         let _target = new Dictionary<string, Link> (target)
         for kvp in from do
@@ -34,6 +48,10 @@ module public MarkovUtilities =
                 _target.Add(kvp.Key, link)
         _target
     
+    /// <summary>
+    /// Static method for printing a chain to console with nice formatting
+    /// </summary>
+    /// <param name="chain">The chain to print</param>
     let PrintChain (chain : Dictionary<string, Link>) =
         for kvp in chain do
             printfn "%s" kvp.Key
@@ -41,6 +59,12 @@ module public MarkovUtilities =
                 printfn "\t%s" x
             printfn ""
     
+    /// <summary>
+    /// Static generation of markov string based on specified length and starting word
+    /// </summary>
+    /// <param name="chain">The chain to use for generation</param>
+    /// <param name="length">The number of words in the generated string</param>
+    /// <param name="word">The starting word</param>
     let Generate (chain : Dictionary<string, Link>) length word =
         let keys = chain.Keys.ToList();
         let mutable _word = word
@@ -57,6 +81,11 @@ module public MarkovUtilities =
                 genChain <- sprintf "%s, %s" genChain _word // Add a comma since it's a new starting point
         genChain
     
+    /// <summary>
+    /// Static generation of a markov string with automatic length
+    /// </summary>
+    /// <param name="chain">The chain to use for generation</param>
+    /// <param name="word">The starting word</param>
     let Autogenerate (chain : Dictionary<string, Link>) word =
         let mutable _word = word
         let mutable genChain = _word
@@ -70,12 +99,22 @@ module public MarkovUtilities =
     
     // PDO Manipulation
 
-    let MergeFrom from target = // Merges two PDO files into one
+    /// <summary>
+    /// Merges two files into one chain
+    /// </summary>
+    /// <param name="from">The name of the first file</param>
+    /// <param name="target">The name of the second file</param>
+    let MergeFrom from target =
         let _from = ReadChain from
         let _target = ReadChain target
 
         Merge _from _target
     
-    let MergeTo from target =   // Merges one PDO file into another
+    /// <summary>
+    /// Merges one chain file into another
+    /// </summary>
+    /// <param name="from">The name of the file to merge from</param>
+    /// <param name="target">The name of the file to merge to</param>
+    let MergeTo from target =
         let merged = MergeFrom from target
         WriteChain target merged

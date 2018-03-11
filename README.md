@@ -3,13 +3,12 @@ A lightning-fast .NET library for generating simple markov chains
 
 Used in [Jahrbuch's "Monika" Discord bot](https://github.com/Jahrbuch/MONI)
 
-# Usage
+# Installation
 This package is available on NuGet.  Just search 'MarkovNextGen'
 
 You can also download MarkovNextGen.dll from my website (Coming Soon!).
 
-# Documentation
-Basic usage is as follows
+# Usage
 
 To create a new Markov generator, you can specify a chain file or use the default markov.pdo
 

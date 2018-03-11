@@ -2,14 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Authors>Devin Lynch</Authors>
+    <Authors>dweslynch</Authors>
     <Product>MarkovNextGen</Product>
     <Company>Devin Lynch</Company>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/dweslynch/MarkovNextGen</RepositoryUrl>
     <Description>Lightning-fast .NET library for generating simple Markov chains</Description>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <PackageReleaseNotes>Added IntelliSense documentation</PackageReleaseNotes>
+    <PackageProjectUrl>http://dweslynch.github.io/projects/MarkovNextGen/index.html</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

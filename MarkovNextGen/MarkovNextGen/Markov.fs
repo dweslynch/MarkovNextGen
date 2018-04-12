@@ -26,7 +26,7 @@ type public Markov(filename) =
     /// </summary>
     member this.Chain
         with get () = _chain
-        and private set (value) = _chain <- value
+        and set (value) = _chain <- value
 
     member private this.ReadChain() =
         let jsonchain = File.ReadAllText _filename
@@ -35,7 +35,7 @@ type public Markov(filename) =
     member private this.WriteChain() =
         let jsonchain = JsonConvert.SerializeObject(_chain, Formatting.Indented)
         File.WriteAllText(_filename, jsonchain)
-    
+
     /// <summary>
     /// Adds a single line of text to the chain without updating the chain file
     /// </summary>
@@ -43,9 +43,10 @@ type public Markov(filename) =
     member private this.LinkToChain(s : string) =
         // Consistent casing and treat linebreaks as spaces
         let lower = s.ToLower().Replace(Environment.NewLine, " ").Trim(' ')
-        // Remove characters other than letters and spaces
-        let cleancopy = Regex.Replace(lower, "[^a-z ]+", "", RegexOptions.Compiled)
-        let words = cleancopy.Split ' '
+        // Remove characters other than letters and spaces and brackets, replace periods with spaces
+        let cleancopy = Regex.Replace(lower, "[^a-z.\]\[ ]+", "", RegexOptions.Compiled).Replace('.', ' ')
+        let spaced = Regex.Replace(cleancopy, @"\s+", " ");
+        let words = spaced.Split ' '
         if words.Length > 1 then // Don't record single words
             for i in [0 .. words.Length - 2] do
                 let key = words.[i]

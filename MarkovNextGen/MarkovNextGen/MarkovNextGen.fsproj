@@ -5,12 +5,15 @@
     <Authors>dweslynch</Authors>
     <Product>MarkovNextGen</Product>
     <Company>Devin Lynch</Company>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/dweslynch/MarkovNextGen</RepositoryUrl>
     <Description>Lightning-fast .NET library for generating simple Markov chains</Description>
-    <Version>1.0.3</Version>
-    <PackageReleaseNotes>Added IntelliSense documentation</PackageReleaseNotes>
+    <Version>1.0.5</Version>
+    <PackageReleaseNotes>Now considers words separated by punctuation two separate words
+Allows brackets (hopefully)</PackageReleaseNotes>
     <PackageProjectUrl>http://dweslynch.github.io/projects/MarkovNextGen/index.html</PackageProjectUrl>
+    <PackageTags>Markov</PackageTags>
+    <Copyright>Devin Lynch 2018</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
